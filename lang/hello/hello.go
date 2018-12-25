@@ -27,6 +27,17 @@ func demo1() {
 	fmt.Println("Your name is:", input)
 }
 
+func demo2(a interface{}) {
+	switch b := a.(type) {
+	case string:
+		fmt.Println("string", b)
+	default:
+		fmt.Println("default", b)
+	}
+}
+
 func main() {
 	fmt.Println(gcd(6, 18))
+	demo2("3")
+	demo2(3)
 }
