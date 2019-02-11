@@ -15,6 +15,7 @@ func init() {
 
 type MonthHeap []string
 
+// 实现heap.Interface需要的5个方法
 func (m MonthHeap) Len() int {
 	return len(m)
 }

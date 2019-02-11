@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/GerryLon/learn-go/lang/ds/lru"
 	"github.com/GerryLon/learn-go/lang/ds/month_heap"
+	"github.com/GerryLon/learn-go/lang/ds/priority_queue"
 )
 
 func traverseCache(cache *lru.CacheDB) {
@@ -56,6 +57,7 @@ func MonthHeapTest() {
 	heap.Init(h)
 	h.Push("May")
 	h.Push("Apr")
+	// first month: Jan
 	fmt.Println("first month:", (*h)[0])
 
 	// 输出: Jan	Feb	Mar	Apr	May
@@ -65,7 +67,42 @@ func MonthHeapTest() {
 	fmt.Println()
 }
 
+func PriorityQueueTest() {
+	items := map[string]int{
+		"AA": 5,
+		"BB": 8,
+		"CC": 3,
+	}
+	pq := make(priority_queue.PriorityQueue, len(items))
+	i := 0
+
+	for value, priority := range items {
+		pq[i] = &priority_queue.Item{
+			Value:    value,
+			Priority: priority,
+			Index:    i,
+		}
+		i++
+	}
+	heap.Init(&pq)
+
+	item := priority_queue.Item{
+		Value:    "DD",
+		Priority: 1,
+	}
+	pq.Push(&item)
+	pq.Update(&item, "EE", 99)
+
+	for pq.Len() > 0 {
+		x := heap.Pop(&pq).(*priority_queue.Item)
+		fmt.Printf("%s %d\n", x.Value, x.Priority)
+	}
+	fmt.Println()
+	return
+}
+
 func main() {
-	LRUTest()
-	MonthHeapTest()
+	// LRUTest()
+	// MonthHeapTest()
+	PriorityQueueTest()
 }
