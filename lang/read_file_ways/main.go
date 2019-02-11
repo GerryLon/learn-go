@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -83,6 +84,45 @@ func readByLine(filename string) (lines [][]byte, err error) {
 	return
 }
 
+// * simulate tail -n -f filename
+func readLikeTail(filename string, n int) (lines [][]byte, err error) {
+	if n <= 0 {
+		return nil, errors.New("argument error")
+	}
+	fp, err := os.Open(filename) // 获取文件指针
+	if err != nil {
+		return nil, err
+	}
+	defer fp.Close()
+
+	offset, err := fp.Seek(0, io.SeekEnd)
+	if err != nil {
+		return nil, err
+	}
+
+	buffer := make([]byte, 1)
+	count := 0
+	for offset > 0 {
+		offset--
+		bytesRead, err := fp.ReadAt(buffer, offset)
+		if err != nil {
+			return nil, err
+		}
+
+		if buffer[0] == '\n' { // 读到了一行
+			count++
+			lines = append(lines, buffer[:bytesRead])
+			if count == n {
+				break
+			}
+		}
+
+		fmt.Printf("buffer=%s\n", buffer)
+	}
+
+	return
+}
+
 func main() {
 	const testFileName = "ls-al.txt"
 	// fmt.Println(file.GetCurrentDirectory())
@@ -107,6 +147,13 @@ func main() {
 		log.Fatal(err)
 	}
 	for i, line := range lines {
-		fmt.Printf("%d %s\n", i+1, line)
+		fmt.Printf("readByLine: %d %s\n", i+1, line)
+	}
+
+	// *
+	fmt.Println()
+	lines, err = readLikeTail(testFileName, 3)
+	for i, line := range lines {
+		fmt.Printf("readLikeTail: %d %s\n", i+1, line)
 	}
 }

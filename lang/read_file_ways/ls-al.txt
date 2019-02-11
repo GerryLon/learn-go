@@ -1,25 +1,5 @@
-total 102
-dr-xr-xr-x.  23 root root  4096 Jan 23 09:24 .
-dr-xr-xr-x.  23 root root  4096 Jan 23 09:24 ..
--rw-r--r--.   1 root root     0 Jan 23 09:24 .autofsck
-dr-xr-xr-x.   2 root root  4096 Dec 22 18:01 bin
-dr-xr-xr-x.   5 root root  1024 Dec 22 17:43 boot
-drwxr-xr-x.  10 root root  4096 Dec 22 18:17 cgroup
-drwxr-xr-x.  19 root root  3620 Jan 23 09:24 dev
-drwxr-xr-x.  66 root root  4096 Jan 23 09:25 etc
-drwxr-xr-x.   2 root root  4096 Sep 23  2011 home
-dr-xr-xr-x.   8 root root  4096 Dec 22 17:56 lib
-dr-xr-xr-x.   9 root root 12288 Dec 22 18:01 lib64
-drwx------.   2 root root 16384 Dec 22 17:40 lost+found
-drwxr-xr-x.   2 root root  4096 Sep 23  2011 media
-drwxr-xr-x.   2 root root  4096 Sep 23  2011 mnt
-drwxr-xr-x.   8 root root  4096 Dec 22 18:21 opt
-dr-xr-xr-x. 117 root root     0 Jan 23 09:24 proc
-dr-xr-x---.  13 root root  4096 Jan 22 16:11 root
-dr-xr-xr-x.   2 root root 12288 Dec 22 18:01 sbin
-drwxr-xr-x.   7 root root     0 Jan 23 09:24 selinux
-drwxr-xr-x.   2 root root  4096 Sep 23  2011 srv
-drwxr-xr-x   13 root root     0 Jan 23 09:24 sys
-drwxrwxrwt.   4 root root  4096 Jan 23 10:07 tmp
-drwxr-xr-x.  13 root root  4096 Dec 22 17:40 usr
-drwxr-xr-x.  19 root root  4096 Dec 22 17:59 var
+abc
+def
+ghi
+jkl
+mn
