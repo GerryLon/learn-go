@@ -1,8 +1,10 @@
 package main
 
 import (
+	"container/heap"
 	"fmt"
 	"github.com/GerryLon/learn-go/lang/ds/lru"
+	"github.com/GerryLon/learn-go/lang/ds/month_heap"
 )
 
 func traverseCache(cache *lru.CacheDB) {
@@ -49,6 +51,21 @@ func LRUTest() {
 	fmt.Println()
 }
 
+func MonthHeapTest() {
+	h := &month_heap.MonthHeap{"Jan", "Feb", "Mar"}
+	heap.Init(h)
+	h.Push("May")
+	h.Push("Apr")
+	fmt.Println("first month:", (*h)[0])
+
+	// 输出: Jan	Feb	Mar	Apr	May
+	for h.Len() > 0 {
+		fmt.Printf("%s\t", heap.Pop(h)) // 注意不是h.Pop()
+	}
+	fmt.Println()
+}
+
 func main() {
 	LRUTest()
+	MonthHeapTest()
 }
