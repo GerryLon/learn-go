@@ -32,6 +32,21 @@ func LRUTest() {
 	// 也就是缓存满后, 再放, 会将最后的元素删除
 	cache.Set("f", 6)
 	traverseCache(cache)
+
+	fmt.Println("test Get()")
+
+	// b:2	c:3	d:4	e:5	f:6
+	for i := 0; i < 6; i++ {
+		k := string(rune('a' + i))
+		v, success, err := cache.Get(k)
+		if err != nil {
+			panic(err)
+		}
+		if success {
+			fmt.Printf("%s:%d\t", k, v)
+		}
+	}
+	fmt.Println()
 }
 
 func main() {
