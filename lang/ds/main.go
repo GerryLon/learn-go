@@ -55,8 +55,8 @@ func LRUTest() {
 func MonthHeapTest() {
 	h := &month_heap.MonthHeap{"Jan", "Feb", "Mar"}
 	heap.Init(h)
-	h.Push("May")
-	h.Push("Apr")
+	heap.Push(h, "May")
+	heap.Push(h, "Apr")
 	// first month: Jan
 	fmt.Println("first month:", (*h)[0])
 
@@ -90,7 +90,7 @@ func PriorityQueueTest() {
 		Value:    "DD",
 		Priority: 1,
 	}
-	pq.Push(&item)
+	heap.Push(&pq, &item)
 	pq.Update(&item, "EE", 99)
 
 	for pq.Len() > 0 {
