@@ -10,6 +10,9 @@
 *.so
 *.dylib
 
+# for beego
+*.debug~
+
 # Test binary, build with `go test -c`
 *.test
 
