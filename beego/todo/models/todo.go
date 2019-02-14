@@ -23,9 +23,9 @@ func init() {
 		m.todoList = &types.TodoList{}
 
 		AddTodo(&types.TodoItem{
-			Id:      0,
-			Content: "test todo item",
-			Done:    false,
+			Id:    0,
+			Title: "test todo item",
+			Done:  false,
 		})
 	}
 }
@@ -63,7 +63,7 @@ func AddTodo(todo *types.TodoItem) (success bool, err error) {
 	b, i, _ := findTodo(todo)
 	if b {
 		(*m.todoList)[i].Done = false
-		(*m.todoList)[i].Content = todo.Content
+		(*m.todoList)[i].Title = todo.Title
 		return true, nil
 	}
 

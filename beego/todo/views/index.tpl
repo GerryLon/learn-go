@@ -11,19 +11,40 @@
       margin: 0px;
       padding: 0px;
     }
+    #app {
+        width: 1200px;
+        margin: 50px auto;
+    }
+
+    .progress.done {
+        color: green;
+    }
+    .progress.not {
+        color: red;
+    }
   </style>
 </head>
 
 <body>
     <div id="app">
         <h1>todos</h1>
+        <div>
+            <form novalidate  @submit.prevent="onAddTodo">
+                <input type="text" placeholder="input your todo" v-model="todoText" @keyup.enter="onAddTodo">
+                <button type="submit">添加todo</button>
+            </form>
+        </div>
         <div class="todo-list">
-            <ol>
-                <li v-for="todo in todos">
-                    {{ todo.content }}
-                    <button v-on:click="onDel(todo)">删除</button>
+            <ol v-if="todos.length > 0">
+                <li v-for="(todo, index) in todos" style="list-style-type: decimal">
+                    <strong>{{ todo.title }}</strong>
+                    <span :class="['progress', todo.done ? 'done' : 'not']">{{ todo.done ? "已" : "未" }}完成</span>
+                    <button @click="onDel(todo, index)">删除</button>
                 </li>
             </ol>
+            <div v-else>
+                没有todo哦！
+            </div>
         </div>
     </div>
 
@@ -47,8 +68,8 @@
         async function http(config = {}) {
             config = extend({
                 method: "GET",
-                data: {},
-                params: {},
+                // data: {},
+                // params: {},
                 url: '',
             }, config);
 
@@ -64,7 +85,10 @@
         let vue = new Vue({
             el: "#app",
             data: {
+                todoText: "",
                 todos: []
+            },
+            computed: {
             },
             async created() {
                 let res = await http({
@@ -79,24 +103,38 @@
 
             },
             methods: {
-                async onDel(todo) {
-                    if (!window.confirm("确定删除：" + todo.content)) {
+                async onDel(todo, index) {
+                    if (!window.confirm("确定删除：" + todo.title)) {
                         return;
                     }
 
                     let res = await http({
-                        url: "/todo",
-                        method: "DELETE",
-                        data: {
-                            id: todo.id
-                        }
+                        url: "/todo/" + todo.id,
+                        method: "DELETE"
                     });
 
                     if (res.ret == 0) {
+                        this.todos.splice(index, 1);
                         alert("删除成功");
                     } else {
                         alert("删除失败：" + res.msg);
                     }
+                },
+
+                async onAddTodo() {
+                    if (!this.todoText.trim()) {
+                        return this.todoText = "";
+                    }
+
+                    // this.todoText = "";
+                    let res = await http({
+                        url: "/todo",
+                        method: "POST",
+                        data: {
+                            title: this.todoText
+                        }
+                    });
+
                 }
             }
         });

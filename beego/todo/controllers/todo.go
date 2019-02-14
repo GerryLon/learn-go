@@ -1,9 +1,13 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/GerryLon/learn-go/beego/todo/models"
+	"github.com/GerryLon/learn-go/beego/todo/types"
 	"github.com/GerryLon/learn-go/beego/todo/util"
 	"github.com/astaxie/beego"
+	"strconv"
 )
 
 type TodoController struct {
@@ -18,10 +22,14 @@ func (c *TodoController) ListAll() {
 	c.ServeJSON()
 }
 
-// DELETE /todo {id: 0}
+// DELETE /todo/id
 // {data: nil, msg: "ok", ret: 0}
 func (c *TodoController) DelTodo() {
-	id, err := c.GetInt("id")
+	idStr := c.Ctx.Input.Param(":id")
+	id, err := strconv.Atoi(idStr)
+
+	// beego.Debug(idStr, id)
+
 	result := util.Response{}
 
 	if err != nil {
@@ -33,6 +41,17 @@ func (c *TodoController) DelTodo() {
 		} else if b {
 			result = util.SuccessResponse(nil)
 		}
+	}
+	c.Data["json"] = result
+	c.ServeJSON()
+}
+
+func (c *TodoController) AddTodo() {
+	result := &types.TodoItem{}
+	fmt.Printf("body=%s", c.Ctx.Input.RequestBody)
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, result)
+	if err != nil {
+		fmt.Println(err)
 	}
 	c.Data["json"] = result
 	c.ServeJSON()
