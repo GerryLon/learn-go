@@ -22,11 +22,12 @@ func init() {
 		}
 		m.todoList = &types.TodoList{}
 
-		AddTodo(&types.TodoItem{
-			Id:    0,
-			Title: "test todo item",
-			Done:  false,
-		})
+		// Mock data
+		// AddTodo(&types.TodoItem{
+		// 	Id:    0,
+		// 	Title: "test todo item",
+		// 	Done:  false,
+		// })
 	}
 }
 
@@ -59,13 +60,14 @@ func AddTodo(todo *types.TodoItem) (success bool, err error) {
 		return false, errors.New("todo item can not be nil")
 	}
 
-	// 如果已经有了, 直接修改内容
-	b, i, _ := findTodo(todo)
-	if b {
-		(*m.todoList)[i].Done = false
-		(*m.todoList)[i].Title = todo.Title
-		return true, nil
-	}
+	// 新增加TODO, 不存在这种情况
+	// // 如果已经有了, 直接修改内容
+	// b, i, _ := findTodo(todo)
+	// if b {
+	// 	(*m.todoList)[i].Done = false
+	// 	(*m.todoList)[i].Title = todo.Title
+	// 	return true, nil
+	// }
 
 	// 新增加的
 	m.lastId++
@@ -78,17 +80,29 @@ func AddTodo(todo *types.TodoItem) (success bool, err error) {
 // 删除一个待办项
 func DelTodo(id int) (success bool, err error) {
 	todo := &types.TodoItem{Id: id}
-	b, _, e := findTodo(todo)
+	b, i, e := findTodo(todo)
 	if !b {
 		return false, e
 	}
 
-	for i, t := range *m.todoList {
-		if t.Id == todo.Id {
-			*m.todoList = append((*m.todoList)[:i], (*m.todoList)[i+1:]...)
-			return true, nil
-		}
+	*m.todoList = append((*m.todoList)[:i], (*m.todoList)[i+1:]...)
+	return true, nil
+}
+
+func ModifyTodo(newTodo *types.TodoItem) (bool, error) {
+	success, index, err := findTodo(newTodo)
+	if !success {
+		return false, err
 	}
 
-	return false, errors.New("todo not found")
+	// 目前只修改done
+	t := (*m.todoList)[index]
+	t.Done = newTodo.Done
+	(*m.todoList)[index] = t
+	return true, nil
+}
+
+func CloneTodo(todo *types.TodoItem) *types.TodoItem {
+	t := *todo
+	return &t
 }

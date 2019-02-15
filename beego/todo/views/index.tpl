@@ -37,8 +37,9 @@
         <div class="todo-list">
             <ol v-if="todos.length > 0">
                 <li v-for="(todo, index) in todos" style="list-style-type: decimal">
-                    <strong>{{ todo.title }}</strong>
-                    <span :class="['progress', todo.done ? 'done' : 'not']">{{ todo.done ? "已" : "未" }}完成</span>
+                    <strong>{{ todo.Title }}</strong>
+                    <strong>当前状态: </strong><span :class="['progress', todo.Done ? 'done' : 'not']">{{ todo.Done ? "已" : "未" }}完成</span>
+                    <button @click="setFinish(todo, index)">设置为{{ todo.Done ? '未': '已' }}完成</button>
                     <button @click="onDel(todo, index)">删除</button>
                 </li>
             </ol>
@@ -91,31 +92,26 @@
             computed: {
             },
             async created() {
-                let res = await http({
-                    url: "/todo"
-                });
-
-                console.log(res);
-
-                if (res.ret == 0) {
-                    this.todos = res.data;
-                }
-
+                this.updateTodos();
             },
             methods: {
-                async onDel(todo, index) {
-                    if (!window.confirm("确定删除：" + todo.title)) {
-                        return;
+                async updateTodos()　{
+                    let res = await http({
+                        url: "/todo"
+                    });
+                    if (res.ret == 0) {
+                        this.todos = res.data;
                     }
+                },
+                async onDel(todo, index) {
 
                     let res = await http({
-                        url: "/todo/" + todo.id,
+                        url: "/todo/" + todo.Id,
                         method: "DELETE"
                     });
 
                     if (res.ret == 0) {
                         this.todos.splice(index, 1);
-                        alert("删除成功");
                     } else {
                         alert("删除失败：" + res.msg);
                     }
@@ -131,10 +127,32 @@
                         url: "/todo",
                         method: "POST",
                         data: {
-                            title: this.todoText
+                            Title: this.todoText
                         }
                     });
 
+                    if (res.ret == 0) {
+                        this.todoText = "";
+                        this.updateTodos();
+                    } else {
+                        alert("添加失败:" + res.msg);
+                    }
+                },
+
+                async setFinish(todo, index) {
+                    let res = await http({
+                        url: "/todo/" + todo.Id,
+                        method: "POST",
+                        data: {
+                            Done: !todo.Done
+                        }
+                    });
+
+                    if (res.ret == 0) {
+                        this.updateTodos();
+                    } else {
+                        alert("修改状态失败:" + res.msg);
+                    }
                 }
             }
         });

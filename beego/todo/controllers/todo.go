@@ -28,8 +28,6 @@ func (c *TodoController) DelTodo() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, err := strconv.Atoi(idStr)
 
-	// beego.Debug(idStr, id)
-
 	result := util.Response{}
 
 	if err != nil {
@@ -46,13 +44,67 @@ func (c *TodoController) DelTodo() {
 	c.ServeJSON()
 }
 
+// 请求格式：
+// POST /todo {"Title": "xxx"}
 func (c *TodoController) AddTodo() {
-	result := &types.TodoItem{}
-	fmt.Printf("body=%s", c.Ctx.Input.RequestBody)
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, result)
+	item := types.TodoItem{}
+	result := util.Response{}
+	var err error
+	var success bool
+	// err=unexpected end of JSON input
+	err = json.Unmarshal(c.Ctx.Input.RequestBody, &item)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("err=%s", err)
+		result = util.FailResponse(nil)
+		goto End
 	}
+
+	// 添加数据
+	success, err = models.AddTodo(&item)
+	if !success {
+		result = util.FailResponse(nil)
+		goto End
+	}
+	result.Data = types.TodoItem{
+		Id: item.Id,
+	}
+End:
+	c.Data["json"] = result
+	c.ServeJSON()
+}
+
+// POST /todo/:id {Done: true} 将id对应的todo的done修改为true
+// 目前只支持修改Done属性
+func (c *TodoController) ModifyTodo() {
+	var item types.TodoItem
+	var err error
+	var id int
+	var success bool
+	var result util.Response
+
+	idStr := c.Ctx.Input.Param(":id")
+	id, err = strconv.Atoi(idStr)
+	if err != nil {
+		result = util.FailResponse(nil)
+		result.Ret = 1
+		goto End
+	}
+	item = types.TodoItem{}
+	err = json.Unmarshal(c.Ctx.Input.RequestBody, &item)
+	if err != nil {
+		result = util.FailResponse(nil)
+		result.Ret = 2
+		goto End
+	}
+	item.Id = id
+	success, err = models.ModifyTodo(&item)
+	if !success {
+		result = util.FailResponse(nil)
+		result.Ret = 3
+		goto End
+	}
+	result = util.SuccessResponse(nil)
+End:
 	c.Data["json"] = result
 	c.ServeJSON()
 }
