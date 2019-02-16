@@ -36,8 +36,20 @@ func demo2(a interface{}) {
 	}
 }
 
+func deferTest() {
+	a := 2
+
+	if a > 3 {
+		return
+	}
+	defer func() {
+		fmt.Println("test defer")
+	}()
+}
+
 func main() {
 	fmt.Println(gcd(6, 18))
 	demo2("3")
 	demo2(3)
+	deferTest()
 }
