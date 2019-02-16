@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/xenolf/lego/log"
 	"net/http"
+	"time"
 )
 
 var (
@@ -29,10 +30,24 @@ func main() {
 			return
 		}
 
+		go func() {
+			var (
+				err error
+			)
+			for {
+				if err = conn.WriteMessage(websocket.TextMessage, []byte("heart beat")); err != nil {
+					log.Println("heart:", err)
+					conn.Close()
+					return
+				}
+				time.Sleep(time.Second * 5)
+			}
+		}()
+
 		for {
 			msgType, data, err = conn.ReadMessage()
 			if err != nil {
-				log.Println(err)
+				log.Println("read:", err)
 				goto End
 			}
 			fmt.Printf("got %s from client\n", string(data))
