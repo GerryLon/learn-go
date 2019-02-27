@@ -29,7 +29,7 @@ import (
 // }
 
 // main3
-// 可以控制, 两个两个goroutine同时执行
+// 可以控制, 最多两个goroutine同时执行
 func main() {
 	wg := sync.WaitGroup{}
 	ch := make(chan bool, 2)
