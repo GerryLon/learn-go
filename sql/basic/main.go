@@ -3,7 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/GerryLon/go-toolkit/common"
+
+	"github.com/GerryLon/go-toolkit/utils"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -30,7 +31,7 @@ func main() {
 	stmt, err := db.Prepare(`INSERT INTO user(name, age) VALUES(?, ?)`)
 	handleErr(err)
 	for i := 0; i < 100; i++ {
-		_, err := stmt.Exec(common.RandomString(8), i+1)
+		_, err := stmt.Exec(utils.RandStr(8, 8), i+1)
 		handleErr(err)
 	}
 	// })
