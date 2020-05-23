@@ -7,16 +7,20 @@ import (
 )
 
 func TestStack(t *testing.T) {
-	s := New()
+	const MaxSize = 10
+	s := New(MaxSize)
 	assert.NotNil(t, s)
+	defer s.Destroy()
 
 	assert.True(t, s.Empty())
 	assert.Equal(t, 0, s.Size())
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < MaxSize; i++ {
 		s.Push(i)
 	}
-	for i := 9; i >=0; i-- {
+	assert.True(t, s.Full())
+
+	for i := MaxSize - 1; i >= 0; i-- {
 		d, ok := s.Pop()
 		assert.True(t, ok)
 		assert.NotNil(t, d)
