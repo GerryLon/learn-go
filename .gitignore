@@ -7,3 +7,5 @@
 
 # Unignore all dirs
 !*/
+
+/main.go
